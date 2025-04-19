@@ -235,6 +235,16 @@ function setActiveButton(button) {
   // Aktif butona sınıf ekle
   button.classList.add("active-button");
 }
+    // JSON verisini çekmek için fetch kullanıyoruz
+fetch('https://raw.githubusercontent.com/Vqtka/Yuuka-/main/m%C3%BCzikler.json') // GitHub'dan JSON dosyasının bağlantısını ekle
+  .then(response => response.json())  // JSON formatında yanıt al
+  .then(data => {
+    // Burada veriyi işleyebilirsin
+    console.log(data);  // Veriyi kontrol etmek için konsola yazdır
+  })
+  .catch(error => {
+    console.log('Veri çekme hatası:', error);  // Hata varsa konsola yazdır
+  });
   </script>
 </body>
 </html>
