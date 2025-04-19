@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ana Sayfa</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #121212;
+      font-family: 'calibri';
+    }
+
+    /* Sadece ikon olan ayar butonu */
+    .menu-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1100;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .menu-toggle .material-symbols-outlined {
+      font-size: 30px;
+      color: white;
+    }
+
+    /* Menü */
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background: #121212;
+      padding: 20px 10px;
+      box-shadow: 8px 0px 9px 0px #00000014;
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .menu.active {
+      transform: translateX(0%);
+    }
+
+    .menu-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 60px;
+    }
+
+    .menu-content li {
+      list-style: none;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .menu-content li:hover {
+      background: #9400D3;
+    }
+
+    .menu-content a {
+      text-decoration: none;
+      color: rgb(213, 213, 213);
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .menu-icon {
+      padding: 10px;
+      font-size: 25px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: #0c0c0c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Alt ikon menüsü */
+    .bottom-icons {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #121212;
+      padding: 10px 0;
+      z-index: 99;
+    }
+
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .icon-wrapper span {
+      font-size: 28px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .icon-wrapper.active span {
+      color: white;
+    }
+
+    .icon-wrapper.active {
+      color: white;
+    }
+    /* Butonlar için stil */
+.button-container {
+  position: fixed;
+  top: 20px;
+  left: 70px; /* Ayar butonunun yanında olacak şekilde hizalandı */
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Butonlar arasına biraz boşluk verildi */
+}
+
+.button-container button {
+  padding: 5px 15px;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #9400D3;
+  border-radius: 50px;
+  font-size: 12px; /* Butonlar küçültüldü */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #9400D3;
+}
+
+.active-button {
+  background-color: #9400D3;
+}
+  </style>
+</head>
+<body>
+
+  <!-- Sadece ikon olan ayar butonu -->
+  <button class="menu-toggle" id="menuBtn" onclick="openMenu()">
+    <span class="material-symbols-outlined">settings</span>
+  </button>
+<div class="button-container">
+  <button id="allBtn">Tümü</button>
+  <button id="songsBtn">Şarkılar</button>
+  <button id="albumsBtn">Albümler</button>
+</div>
+  <!-- Yan Menü -->
+  <div class="menu" id="sidebarMenu">
+    <ul class="menu-content">
+      <li><a href="Anasayfa.html"><span class="material-symbols-outlined menu-icon">home</span><span>Ana Sayfa</span></a></li>
+    
+      <li><a href="Keşfet.html"><span class="material-symbols-outlined menu-icon">explore</span><span>Keşfet</span></a></li>
+      <li><a href="Analiz.html"><span class="material-symbols-outlined menu-icon">analytics</span><span>Analiz</span></a></li>
+      <li><a href="Ayarlar.html"><span class="material-symbols-outlined menu-icon">settings</span><span>Ayarlar</span></a></li>
+      <li><a href="Hesap.html"><span class="material-symbols-outlined menu-icon">person</span><span>Hesap</span></a></li>
+      <li><a href="Rapor.html"><span class="material-symbols-outlined menu-icon">report</span><span>Rapor</span></a></li>
+      <li><a href="Iletişim.html"><span class="material-symbols-outlined menu-icon">email</span><span>İletişim</span></a></li>
+      <li><a href="Giriş_Kayıt.html"><span class="material-symbols-outlined menu-icon">logout</span><span>Çıkış</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Alt Iconlar -->
+  <div class="bottom-icons">
+    <a href="Anasayfa.html" class="icon-wrapper active">
+      <span class="material-symbols-outlined">home</span>
+      Ana Sayfa
+    </a>
+    <a href="Arama.html" class="icon-wrapper">
+      <span class="material-symbols-outlined">search</span>
+      Ara
+    </a>
+    <a href="Kitaplik.html" class="icon-wrapper">
+      <span class="material-symbols-outlined">menu_book</span>
+      Kitaplık
+    </a>
+  </div>
+
+  <script>
+    function openMenu() {
+      document.getElementById('sidebarMenu').classList.add('active');
+      document.getElementById('menuBtn').style.display = 'none';
+    }
+
+    document.addEventListener('click', function (e) {
+      const menu = document.getElementById('sidebarMenu');
+      const button = document.getElementById('menuBtn');
+      if (!menu.contains(e.target) && !button.contains(e.target)) {
+        menu.classList.remove('active');
+        button.style.display = 'block';
+      }
+    });
+    document.getElementById("allBtn").addEventListener("click", function() {
+  setActiveButton(this);
+  // Burada "Tümü" kısmı aktif olduğunda tüm içerik gösterilebilir
+});
+
+document.getElementById("songsBtn").addEventListener("click", function() {
+  setActiveButton(this);
+  // Burada "Şarkılar" kısmı aktif olduğunda sadece şarkılar gösterilebilir
+});
+
+document.getElementById("albumsBtn").addEventListener("click", function() {
+  setActiveButton(this);
+  // Burada "Albümler" kısmı aktif olduğunda sadece albümler gösterilebilir
+});
+
+function setActiveButton(button) {
+  // Tüm butonları varsayılan duruma getir
+  document.querySelectorAll(".button-container button").forEach(function(btn) {
+    btn.classList.remove("active-button");
+  });
+  
+  // Aktif butona sınıf ekle
+  button.classList.add("active-button");
+}
+  </script>
+</body>
+</html>
