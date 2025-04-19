@@ -235,16 +235,17 @@ function setActiveButton(button) {
   // Aktif butona sınıf ekle
   button.classList.add("active-button");
 }
-    // JSON verisini çekmek için fetch kullanıyoruz
-fetch('https://raw.githubusercontent.com/Vqtka/Yuuka-/main/m%C3%BCzikler.json') // GitHub'dan JSON dosyasının bağlantısını ekle
-  .then(response => response.json())  // JSON formatında yanıt al
-  .then(data => {
-    // Burada veriyi işleyebilirsin
-    console.log(data);  // Veriyi kontrol etmek için konsola yazdır
-  })
-  .catch(error => {
-    console.log('Veri çekme hatası:', error);  // Hata varsa konsola yazdır
-  });
+fetch('https://raw.githubusercontent.com/Vqtka/Yuuka-/main/m%C3%BCzikler.json')
+.then(response => response.json())
+.then(data => {
+    const musicList = data.musics; // diyelim ki 'musics' anahtar kelimesiyle listeliyorsun
+    let output = '';
+    musicList.forEach(music => {
+        output += `<p>${music.title}</p>`; // Şarkı başlığını ekrana yazdır
+    });
+    document.getElementById('music-list').innerHTML = output;
+})
+.catch(error => console.error('Hata:', error));
   </script>
 </body>
 </html>
