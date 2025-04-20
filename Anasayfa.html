@@ -234,18 +234,20 @@ function setActiveButton(button) {
   
   // Aktif butona sınıf ekle
   button.classList.add("active-button");
-}
-fetch('https://raw.githubusercontent.com/Vqtka/Yuuka-/main/muzikler.json')
-.then(response => response.json())
-.then(data => {
-    const musicList = data.musics; // diyelim ki 'musics' anahtar kelimesiyle listeliyorsun
-    let output = '';
-    musicList.forEach(music => {
-        output += `<p>${music.title}</p>`; // Şarkı başlığını ekrana yazdır
+    }
+fetch("https://raw.githubusercontent.com/Vqtka/Yuuka-/main/muzikler.json")
+  .then(response => response.json())
+  .then(data => {
+    const liste = document.getElementById("müzik-listesi");
+    data.forEach(sarki => {
+      const div = document.createElement("div");
+      div.innerHTML = `<h3>${sarki.sarki_adi}</h3><p>${sarki.sanatci}</p>`;
+      liste.appendChild(div);
     });
-    document.getElementById('music-list').innerHTML = output;
-})
-.catch(error => console.error('Hata:', error));
+  })
+  .catch(error => {
+    console.error("Hata oluştu:", error);
+  });
   </script>
 </body>
 </html>
