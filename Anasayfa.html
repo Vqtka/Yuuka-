@@ -253,6 +253,34 @@ fetch("https://raw.githubusercontent.com/Vqtka/Yuuka-/main/muzikler.json")
   .catch(error => {
     console.error("Hata oluştu:", error);
   });
+  // Spotify API'sinden access token almak için gerekli kod
+  fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa('f33bba90ddcb41b4991b5960505ab8cf' + ':' + '153aad24a85b4371a062e5dc5ba6a824'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  })
+  .then(response => response.json())
+  .then(data => {
+    const accessToken = data.access_token;
+    console.log('Access Token:', accessToken);  // Token burada alındı
+    // Bundan sonraki adımda, token'ı kullanarak Spotify'dan veri çekebiliriz
+    fetch('https://api.spotify.com/v1/albums/album_id/tracks', {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    })
+    .then(response => response.json())
+    .then(trackData => {
+      console.log('Şarkı Verisi:', trackData);
+      // Burada şarkı verilerini HTML içinde gösterebilirsin
+    })
+    .catch(error => console.error('Spotify API verisi çekme hatası:', error));
+  })
+  .catch(error => console.error('Access token alma hatası:', error));
   </script>
 </body>
 </html>
