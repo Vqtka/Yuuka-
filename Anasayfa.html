@@ -236,9 +236,14 @@ function setActiveButton(button) {
   button.classList.add("active-button");
     }
 fetch("https://raw.githubusercontent.com/Vqtka/Yuuka-/main/muzikler.json")
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Ağ isteği başarısız oldu: ' + response.status);
+    }
+    return response.json();
+  })
   .then(data => {
-    const liste = document.getElementById("müzik-listesi");
+    const liste = document.getElementById("muziklistesi");
     data.forEach(sarki => {
       const div = document.createElement("div");
       div.innerHTML = `<h3>${sarki.sarki_adi}</h3><p>${sarki.sanatci}</p>`;
