@@ -196,6 +196,7 @@
       Kitaplık
     </a>
   </div>
+  <div id="track-list"></div>
   <script>
     function openMenu() {
       document.getElementById('sidebarMenu').classList.add('active');
@@ -234,7 +235,6 @@ function setActiveButton(button) {
   // Aktif butona sınıf ekle
   button.classList.add("active-button");
     }
-  // Spotify API'sinden access token almak için gerekli kod
   fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -246,9 +246,11 @@ function setActiveButton(button) {
   .then(response => response.json())
   .then(data => {
     const accessToken = data.access_token;
-    console.log('Access Token:', accessToken);  // Token burada alındı
-    // Bundan sonraki adımda, token'ı kullanarak Spotify'dan veri çekebiliriz
-    fetch('https://api.spotify.com/v1/albums/album_id/tracks', {
+    console.log('Access Token:', accessToken);
+
+    const albumId = '1ATL5GLyefJaxhQzSPVrLX'; // Spotify'dan örnek albüm ID
+
+    fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + accessToken
@@ -257,7 +259,12 @@ function setActiveButton(button) {
     .then(response => response.json())
     .then(trackData => {
       console.log('Şarkı Verisi:', trackData);
-      // Burada şarkı verilerini HTML içinde gösterebilirsin
+      const container = document.getElementById('track-list');
+      trackData.items.forEach(track => {
+        const div = document.createElement('div');
+        div.textContent = track.name + ' - ' + track.artists[0].name;
+        container.appendChild(div);
+      });
     })
     .catch(error => console.error('Spotify API verisi çekme hatası:', error));
   })
