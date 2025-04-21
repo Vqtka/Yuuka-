@@ -196,7 +196,6 @@
       Kitaplık
     </a>
   </div>
-  <div id="track-list"></div>
   <script>
     function openMenu() {
       document.getElementById('sidebarMenu').classList.add('active');
@@ -235,40 +234,6 @@ function setActiveButton(button) {
   // Aktif butona sınıf ekle
   button.classList.add("active-button");
     }
-  fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic ' + btoa('f33bba90ddcb41b4991b5960505ab8cf' + ':' + '153aad24a85b4371a062e5dc5ba6a824'),
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials',
-  })
-  .then(response => response.json())
-  .then(data => {
-    const accessToken = data.access_token;
-    console.log('Access Token:', accessToken);
-
-    const albumId = '1ATL5GLyefJaxhQzSPVrLX'; // Spotify'dan örnek albüm ID
-
-    fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    })
-    .then(response => response.json())
-    .then(trackData => {
-      console.log('Şarkı Verisi:', trackData);
-      const container = document.getElementById('track-list');
-      trackData.items.forEach(track => {
-        const div = document.createElement('div');
-        div.textContent = track.name + ' - ' + track.artists[0].name;
-        container.appendChild(div);
-      });
-    })
-    .catch(error => console.error('Spotify API verisi çekme hatası:', error));
-  })
-  .catch(error => console.error('Access token alma hatası:', error));
-  </script>
+    </script>
 </body>
 </html>
