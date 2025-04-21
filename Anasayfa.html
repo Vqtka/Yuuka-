@@ -124,16 +124,15 @@
     .icon-wrapper.active {
       color: white;
     }
-
     /* Butonlar için stil */
     .button-container {
       position: fixed;
       top: 20px;
-      left: 70px;
+      left: 70px; /* Ayar butonunun yanında olacak şekilde hizalandı */
       z-index: 100;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 10px; /* Butonlar arasına biraz boşluk verildi */
     }
 
     .button-container button {
@@ -142,7 +141,7 @@
       color: #fff;
       border: 1px solid #9400D3;
       border-radius: 50px;
-      font-size: 12px;
+      font-size: 12px; /* Butonlar küçültüldü */
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -155,29 +154,16 @@
       background-color: #9400D3;
     }
 
-    /* Musics List */
+    /* Musics list */
     #musics-list {
-      width: 100%;
-      min-height: 200px;
-      padding: 10px;
-      margin-top: 20px;
-      background-color: #333;
+      padding: 20px;
+      margin-top: 100px;
       color: white;
     }
 
     .music-item {
-      padding: 10px;
-      background-color: #444;
       margin-bottom: 10px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
     }
-
-    .music-item span {
-      font-size: 16px;
-    }
-
   </style>
 </head>
 <body>
@@ -186,7 +172,7 @@
   <button class="menu-toggle" id="menuBtn" onclick="openMenu()">
     <span class="material-symbols-outlined">settings</span>
   </button>
-
+  
   <div class="button-container">
     <button id="allBtn">Tümü</button>
     <button id="songsBtn">Şarkılar</button>
@@ -223,15 +209,14 @@
     </a>
   </div>
 
-  <div id="musics-list">
-    <!-- Firebase verileri burada görünecek -->
-  </div>
+  <!-- Music List -->
+  <div id="musics-list"></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 
   <script>
-    // Firebase Configuration
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
       authDomain: "yuukaapp-e010.firebaseapp.com",
@@ -243,12 +228,12 @@
       measurementId: "G-D9WZ47KMK8"
     };
 
-    // Firebase Initialization
+    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database(app);
 
-    // Verileri Firebase'ten çekme
-    const musicsRef = database.ref('musics');
+    // Veriyi çekme ve listeleme
+    const musicsRef = database.ref('music');  // Firebase veritabanındaki 'music' kısmı
     musicsRef.on('value', (snapshot) => {
       const musics = snapshot.val();
       const musicsList = document.getElementById("musics-list");
@@ -264,21 +249,10 @@
       }
     });
 
-    // Menü açma işlevi
     function openMenu() {
       document.getElementById('sidebarMenu').classList.add('active');
       document.getElementById('menuBtn').style.display = 'none';
     }
 
-    // Dışarıdan tıklama kontrolü
     document.addEventListener('click', function (e) {
-      const menu = document.getElementById('sidebarMenu');
-      const button = document.getElementById('menuBtn');
-      if (!menu.contains(e.target) && !button.contains(e.target)) {
-        menu.classList.remove('active');
-        button.style.display = 'block';
-      }
-    });
-  </script>
-</body>
-</html>
+      const menu = document.getElementById
