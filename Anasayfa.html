@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ana Sayfa</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-  <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-database.js"></script>
   <style>
     * {
       margin: 0;
@@ -127,32 +125,7 @@
       color: white;
     }
 
-    /* Music list */
-    .music-card {
-      background-color: #1e1e1e;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      color: white;
-    }
-
-    .music-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-
-    .music-card h3 {
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .music-card p {
-      font-size: 14px;
-      color: #aaa;
-    }
-
+    /* Butonlar için stil */
     .button-container {
       position: fixed;
       top: 20px;
@@ -181,9 +154,34 @@
     .active-button {
       background-color: #9400D3;
     }
+
+    /* Musics List */
+    #musics-list {
+      width: 100%;
+      min-height: 200px;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+    }
+
+    .music-item {
+      padding: 10px;
+      background-color: #444;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .music-item span {
+      font-size: 16px;
+    }
+
   </style>
 </head>
 <body>
+
   <!-- Sadece ikon olan ayar butonu -->
   <button class="menu-toggle" id="menuBtn" onclick="openMenu()">
     <span class="material-symbols-outlined">settings</span>
@@ -225,11 +223,15 @@
     </a>
   </div>
 
-  <!-- Music Listesi Burada Görünecek -->
-  <div id="music-list" class="container"></div>
+  <div id="musics-list">
+    <!-- Firebase verileri burada görünecek -->
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 
   <script>
-    // Firebase yapılandırması
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
       authDomain: "yuukaapp-e010.firebaseapp.com",
@@ -241,44 +243,34 @@
       measurementId: "G-D9WZ47KMK8"
     };
 
-    // Firebase'i başlat
+    // Firebase Initialization
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database(app);
 
-    // Veriyi çekme
-    document.addEventListener("DOMContentLoaded", function () {
-      const muzikRef = firebase.database().ref("music");
+    // Verileri Firebase'ten çekme
+    const musicsRef = database.ref('musics');
+    musicsRef.on('value', (snapshot) => {
+      const musics = snapshot.val();
+      const musicsList = document.getElementById("musics-list");
+      musicsList.innerHTML = ''; // Listeyi temizle
 
-      muzikRef.once("value")
-        .then(snapshot => {
-          const musicList = document.getElementById("music-list");
-          musicList.innerHTML = ""; // varsa önceki verileri temizle
-
-          snapshot.forEach(childSnapshot => {
-            const music = childSnapshot.val();
-
-            const musicCard = document.createElement("div");
-            musicCard.classList.add("music-card");
-
-            musicCard.innerHTML = `
-              <img src="${music.kapak}" alt="${music.isim}" />
-              <h3>${music.isim}</h3>
-              <p>${music.sanatci}</p>
-            `;
-
-            musicList.appendChild(musicCard);
-          });
-        })
-        .catch(error => {
-          console.error("Veri çekme hatası:", error);
-        });
+      // Verileri listele
+      for (const musicId in musics) {
+        const music = musics[musicId];
+        const musicItem = document.createElement('div');
+        musicItem.classList.add('music-item');
+        musicItem.innerHTML = `<span>${music.title}</span><span>${music.artist}</span>`;
+        musicsList.appendChild(musicItem);
+      }
     });
 
+    // Menü açma işlevi
     function openMenu() {
       document.getElementById('sidebarMenu').classList.add('active');
       document.getElementById('menuBtn').style.display = 'none';
     }
 
+    // Dışarıdan tıklama kontrolü
     document.addEventListener('click', function (e) {
       const menu = document.getElementById('sidebarMenu');
       const button = document.getElementById('menuBtn');
@@ -289,4 +281,4 @@
     });
   </script>
 </body>
-                                                                                                </html>
+</html>
