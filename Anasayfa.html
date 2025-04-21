@@ -5,177 +5,234 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
   <title>Ana Sayfa</title>  
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />  
+  <!-- Firebase SDK'larını ekliyoruz -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <style>  
     * {  
       margin: 0;  
       padding: 0;  
       box-sizing: border-box;  
-    }  body {  
-  min-height: 100vh;  
-  background: #121212;  
-  font-family: 'calibri';  
-}  
+    }  
+    
+    body {  
+      min-height: 100vh;  
+      background: #121212;  
+      font-family: 'calibri';  
+    }  
 
-/* Sadece ikon olan ayar butonu */  
-.menu-toggle {  
-  position: fixed;  
-  top: 20px;  
-  left: 20px;  
-  z-index: 1100;  
-  background: transparent;  
-  border: none;  
-  padding: 0;  
-  cursor: pointer;  
-}  
+    /* İçerik alanı */
+    .content-area {
+      margin-top: 80px;
+      padding: 20px;
+      color: white;
+    }
+    
+    /* Müzik öğeleri için stil */
+    .music-item {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .music-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      margin-right: 15px;
+      object-fit: cover;
+    }
+    
+    .music-info {
+      flex: 1;
+    }
+    
+    .music-info h3 {
+      margin-bottom: 5px;
+      color: white;
+    }
+    
+    .music-info p {
+      color: #aaa;
+      font-size: 14px;
+    }
+    
+    /* Sadece ikon olan ayar butonu */  
+    .menu-toggle {  
+      position: fixed;  
+      top: 20px;  
+      left: 20px;  
+      z-index: 1100;  
+      background: transparent;  
+      border: none;  
+      padding: 0;  
+      cursor: pointer;  
+    }  
 
-.menu-toggle .material-symbols-outlined {  
-  font-size: 30px;  
-  color: white;  
-}  
+    .menu-toggle .material-symbols-outlined {  
+      font-size: 30px;  
+      color: white;  
+    }  
 
-/* Menü */  
-.menu {  
-  position: fixed;  
-  top: 0;  
-  left: 0;  
-  width: 250px;  
-  height: 100%;  
-  background: #121212;  
-  padding: 20px 10px;  
-  box-shadow: 8px 0px 9px 0px #00000014;  
-  z-index: 1000;  
-  transform: translateX(-100%);  
-  transition: transform 0.3s ease;  
-}  
+    /* Menü */  
+    .menu {  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      width: 250px;  
+      height: 100%;  
+      background: #121212;  
+      padding: 20px 10px;  
+      box-shadow: 8px 0px 9px 0px #00000014;  
+      z-index: 1000;  
+      transform: translateX(-100%);  
+      transition: transform 0.3s ease;  
+    }  
 
-.menu.active {  
-  transform: translateX(0%);  
-}  
+    .menu.active {  
+      transform: translateX(0%);  
+    }  
 
-.menu-content {  
-  display: flex;  
-  flex-direction: column;  
-  align-items: flex-start;  
-  margin-top: 60px;  
-}  
+    .menu-content {  
+      display: flex;  
+      flex-direction: column;  
+      align-items: flex-start;  
+      margin-top: 60px;  
+    }  
 
-.menu-content li {  
-  list-style: none;  
-  margin-bottom: 20px;  
-  width: 100%;  
-}  
+    .menu-content li {  
+      list-style: none;  
+      margin-bottom: 20px;  
+      width: 100%;  
+    }  
 
-.menu-content li:hover {  
-  background: #9400D3;  
-}  
+    .menu-content li:hover {  
+      background: #9400D3;  
+    }  
 
-.menu-content a {  
-  text-decoration: none;  
-  color: rgb(213, 213, 213);  
-  display: flex;  
-  align-items: center;  
-  width: 100%;  
-}  
+    .menu-content a {  
+      text-decoration: none;  
+      color: rgb(213, 213, 213);  
+      display: flex;  
+      align-items: center;  
+      width: 100%;  
+    }  
 
-.menu-icon {  
-  padding: 10px;  
-  font-size: 25px;  
-  margin-right: 10px;  
-  border-radius: 50%;  
-  background: #0c0c0c;  
-  display: flex;  
-  align-items: center;  
-  justify-content: center;  
-}  
+    .menu-icon {  
+      padding: 10px;  
+      font-size: 25px;  
+      margin-right: 10px;  
+      border-radius: 50%;  
+      background: #0c0c0c;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+    }  
 
-/* Alt ikon menüsü */  
-.bottom-icons {  
-  position: fixed;  
-  bottom: 0;  
-  width: 100%;  
-  display: flex;  
-  justify-content: space-around;  
-  background: #121212;  
-  padding: 10px 0;  
-  z-index: 99;  
-}  
+    /* Alt ikon menüsü */  
+    .bottom-icons {  
+      position: fixed;  
+      bottom: 0;  
+      width: 100%;  
+      display: flex;  
+      justify-content: space-around;  
+      background: #121212;  
+      padding: 10px 0;  
+      z-index: 99;  
+    }  
 
-.icon-wrapper {  
-  display: flex;  
-  flex-direction: column;  
-  align-items: center;  
-  color: #aaa;  
-  text-decoration: none;  
-  font-size: 12px;  
-}  
+    .icon-wrapper {  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      color: #aaa;  
+      text-decoration: none;  
+      font-size: 12px;  
+    }  
 
-.icon-wrapper span {  
-  font-size: 28px;  
-  color: #aaa;  
-  margin-bottom: 4px;  
-}  
+    .icon-wrapper span {  
+      font-size: 28px;  
+      color: #aaa;  
+      margin-bottom: 4px;  
+    }  
 
-.icon-wrapper.active span {  
-  color: white;  
-}  
+    .icon-wrapper.active span {  
+      color: white;  
+    }  
 
-.icon-wrapper.active {  
-  color: white;  
-}  
-/* Butonlar için stil */
+    .icon-wrapper.active {  
+      color: white;  
+    }  
+    
+    /* Butonlar için stil */
+    .button-container {
+      position: fixed;
+      top: 20px;
+      left: 70px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-.button-container {
-position: fixed;
-top: 20px;
-left: 70px; /* Ayar butonunun yanında olacak şekilde hizalandı /
-z-index: 100;
-display: flex;
-align-items: center;
-gap: 10px; / Butonlar arasına biraz boşluk verildi */
-}
+    .button-container button {
+      padding: 5px 15px;
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #9400D3;
+      border-radius: 50px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-.button-container button {
-padding: 5px 15px;
-background-color: #1e1e1e;
-color: #fff;
-border: 1px solid #9400D3;
-border-radius: 50px;
-font-size: 12px; /* Butonlar küçültüldü */
-cursor: pointer;
-transition: background-color 0.3s ease;
-}
+    .button-container button:hover {
+      background-color: #9400D3;
+    }
 
-.button-container button:hover {
-background-color: #9400D3;
-}
-
-.active-button {
-background-color: #9400D3;
-}
-</style>
-
+    .active-button {
+      background-color: #9400D3;
+    }
+  </style>
 </head>  
-<body>    <!-- Sadece ikon olan ayar butonu -->    <button class="menu-toggle" id="menuBtn" onclick="openMenu()">  
+<body>  
+  <!-- Sadece ikon olan ayar butonu -->    
+  <button class="menu-toggle" id="menuBtn" onclick="openMenu()">  
     <span class="material-symbols-outlined">settings</span>  
   </button>  
-<div class="button-container">  
-  <button id="allBtn">Tümü</button>  
-  <button id="songsBtn">Şarkılar</button>  
-  <button id="albumsBtn">Albümler</button>  
-</div>  
+  
+  <div class="button-container">  
+    <button id="allBtn" class="active-button">Tümü</button>  
+    <button id="songsBtn">Şarkılar</button>  
+    <button id="albumsBtn">Albümler</button>  
+  </div>  
+  
+  <!-- İçerik Alanı -->
+  <div class="content-area" id="contentArea">
+    <div id="musicList">
+      <!-- Firebase'den gelen veriler burada gösterilecek -->
+    </div>
+  </div>
+  
   <!-- Yan Menü -->  
   <div class="menu" id="sidebarMenu">  
     <ul class="menu-content">  
-      <li><a href="Anasayfa.html"><span class="material-symbols-outlined menu-icon">home</span><span>Ana Sayfa</span></a></li>  <li><a href="Keşfet.html"><span class="material-symbols-outlined menu-icon">explore</span><span>Keşfet</span></a></li>  
-  <li><a href="Analiz.html"><span class="material-symbols-outlined menu-icon">analytics</span><span>Analiz</span></a></li>  
-  <li><a href="Ayarlar.html"><span class="material-symbols-outlined menu-icon">settings</span><span>Ayarlar</span></a></li>  
-  <li><a href="Hesap.html"><span class="material-symbols-outlined menu-icon">person</span><span>Hesap</span></a></li>  
-  <li><a href="Rapor.html"><span class="material-symbols-outlined menu-icon">report</span><span>Rapor</span></a></li>  
-  <li><a href="Iletişim.html"><span class="material-symbols-outlined menu-icon">email</span><span>İletişim</span></a></li>  
-  <li><a href="Giriş_Kayıt.html"><span class="material-symbols-outlined menu-icon">logout</span><span>Çıkış</span></a></li>  
-</ul>
-
-  </div>    <!-- Alt Iconlar -->    <div class="bottom-icons">  
+      <li><a href="Anasayfa.html"><span class="material-symbols-outlined menu-icon">home</span><span>Ana Sayfa</span></a></li>  
+      <li><a href="Keşfet.html"><span class="material-symbols-outlined menu-icon">explore</span><span>Keşfet</span></a></li>  
+      <li><a href="Analiz.html"><span class="material-symbols-outlined menu-icon">analytics</span><span>Analiz</span></a></li>  
+      <li><a href="Ayarlar.html"><span class="material-symbols-outlined menu-icon">settings</span><span>Ayarlar</span></a></li>  
+      <li><a href="Hesap.html"><span class="material-symbols-outlined menu-icon">person</span><span>Hesap</span></a></li>  
+      <li><a href="Rapor.html"><span class="material-symbols-outlined menu-icon">report</span><span>Rapor</span></a></li>  
+      <li><a href="Iletişim.html"><span class="material-symbols-outlined menu-icon">email</span><span>İletişim</span></a></li>  
+      <li><a href="Giriş_Kayıt.html"><span class="material-symbols-outlined menu-icon">logout</span><span>Çıkış</span></a></li>  
+    </ul>
+  </div>    
+    
+  <!-- Alt Iconlar -->    
+  <div class="bottom-icons">  
     <a href="Anasayfa.html" class="icon-wrapper active">  
       <span class="material-symbols-outlined">home</span>  
       Ana Sayfa  
@@ -189,44 +246,101 @@ background-color: #9400D3;
       Kitaplık  
     </a>  
   </div>  
+  
   <script>  
+    // Firebase yapılandırma
+    const firebaseConfig = {
+      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
+      authDomain: "yuukaapp-e010.firebaseapp.com",
+      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
+      projectId: "yuukaapp-e010",
+      storageBucket: "yuukaapp-e010.firebasestorage.app",
+      messagingSenderId: "769441264575",
+      appId: "1:769441264575:web:ffeb9e450b44253ba9a70a",
+      measurementId: "G-D9WZ47KMK8"
+    };
+
+    // Firebase'i başlat
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Verileri çek ve göster
+    function fetchMusicData(type = 'all') {
+      const musicList = document.getElementById('musicList');
+      musicList.innerHTML = '<p>Yükleniyor...</p>';
+      
+      let refPath = 'music/';
+      if (type === 'songs') refPath = 'music/songs/';
+      if (type === 'albums') refPath = 'music/albums/';
+      
+      database.ref(refPath).once('value').then((snapshot) => {
+        const data = snapshot.val();
+        musicList.innerHTML = '';
+        
+        if (data) {
+          Object.keys(data).forEach((key) => {
+            const item = data[key];
+            musicList.innerHTML += `
+              <div class="music-item">
+                <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.title}">
+                <div class="music-info">
+                  <h3>${item.title || 'Başlık Yok'}</h3>
+                  <p>${item.artist || 'Sanatçı Yok'} • ${item.album || 'Albüm Yok'}</p>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          musicList.innerHTML = '<p>Gösterilecek veri bulunamadı.</p>';
+        }
+      }).catch((error) => {
+        console.error("Veri okuma hatası:", error);
+        musicList.innerHTML = '<p>Veriler yüklenirken bir hata oluştu.</p>';
+      });
+    }
+
+    // Sayfa yüklendiğinde verileri getir
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchMusicData();
+    });
+
+    // Menü fonksiyonları
     function openMenu() {  
       document.getElementById('sidebarMenu').classList.add('active');  
       document.getElementById('menuBtn').style.display = 'none';  
-    }  document.addEventListener('click', function (e) {  
-  const menu = document.getElementById('sidebarMenu');  
-  const button = document.getElementById('menuBtn');  
-  if (!menu.contains(e.target) && !button.contains(e.target)) {  
-    menu.classList.remove('active');  
-    button.style.display = 'block';  
-  }  
-});  
-document.getElementById("allBtn").addEventListener("click", function() {
+    }  
 
-setActiveButton(this);
-// Burada "Tümü" kısmı aktif olduğunda tüm içerik gösterilebilir
-});
+    document.addEventListener('click', function (e) {  
+      const menu = document.getElementById('sidebarMenu');  
+      const button = document.getElementById('menuBtn');  
+      if (!menu.contains(e.target) && !button.contains(e.target)) {  
+        menu.classList.remove('active');  
+        button.style.display = 'block';  
+      }  
+    });  
 
-document.getElementById("songsBtn").addEventListener("click", function() {
-setActiveButton(this);
-// Burada "Şarkılar" kısmı aktif olduğunda sadece şarkılar gösterilebilir
-});
+    // Filtre butonları
+    document.getElementById("allBtn").addEventListener("click", function() {
+      setActiveButton(this);
+      fetchMusicData('all');
+    });
 
-document.getElementById("albumsBtn").addEventListener("click", function() {
-setActiveButton(this);
-// Burada "Albümler" kısmı aktif olduğunda sadece albümler gösterilebilir
-});
+    document.getElementById("songsBtn").addEventListener("click", function() {
+      setActiveButton(this);
+      fetchMusicData('songs');
+    });
 
-function setActiveButton(button) {
-// Tüm butonları varsayılan duruma getir
-document.querySelectorAll(".button-container button").forEach(function(btn) {
-btn.classList.remove("active-button");
-});
+    document.getElementById("albumsBtn").addEventListener("click", function() {
+      setActiveButton(this);
+      fetchMusicData('albums');
+    });
 
-// Aktif butona sınıf ekle
-button.classList.add("active-button");
-}
-</script>
-
+    function setActiveButton(button) {
+      document.querySelectorAll(".button-container button").forEach(function(btn) {
+        btn.classList.remove("active-button");
+      });
+      button.classList.add("active-button");
+    }
+  </script>
 </body>  
-</html>  
+</html>
