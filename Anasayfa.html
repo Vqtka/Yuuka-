@@ -5,52 +5,162 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ana Sayfa</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-
-  <!-- Firebase App (core) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-
-  <!-- Firebase Database -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
-      authDomain: "yuukaapp-e010.firebaseapp.com",
-      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
-      projectId: "yuukaapp-e010",
-      storageBucket: "yuukaapp-e010.firebasestorage.app",
-      messagingSenderId: "769441264575",
-      appId: "1:769441264575:web:ffeb9e450b44253ba9a70a",
-      measurementId: "G-D9WZ47KMK8"
-    };
-
-    // Firebase'i başlat
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-  </script>
-
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
-    /* senin CSS'lerin burada */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { min-height: 100vh; background: #121212; font-family: 'calibri'; }
-    .menu-toggle { position: fixed; top: 20px; left: 20px; z-index: 1100; background: transparent; border: none; padding: 0; cursor: pointer; }
-    .menu-toggle .material-symbols-outlined { font-size: 30px; color: white; }
-    .menu { position: fixed; top: 0; left: 0; width: 250px; height: 100%; background: #121212; padding: 20px 10px; box-shadow: 8px 0px 9px 0px #00000014; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease; }
+    body {
+      min-height: 100vh;
+      background: #121212;
+      font-family: 'calibri';
+      color: white;
+    }
+
+    .menu-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1100;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .menu-toggle .material-symbols-outlined {
+      font-size: 30px;
+      color: white;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background: #121212;
+      padding: 20px 10px;
+      box-shadow: 8px 0px 9px 0px #00000014;
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
     .menu.active { transform: translateX(0%); }
-    .menu-content { display: flex; flex-direction: column; align-items: flex-start; margin-top: 60px; }
-    .menu-content li { list-style: none; margin-bottom: 20px; width: 100%; }
+
+    .menu-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 60px;
+    }
+
+    .menu-content li {
+      list-style: none;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
     .menu-content li:hover { background: #9400D3; }
-    .menu-content a { text-decoration: none; color: rgb(213, 213, 213); display: flex; align-items: center; width: 100%; }
-    .menu-icon { padding: 10px; font-size: 25px; margin-right: 10px; border-radius: 50%; background: #0c0c0c; display: flex; align-items: center; justify-content: center; }
-    .bottom-icons { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #121212; padding: 10px 0; z-index: 99; }
-    .icon-wrapper { display: flex; flex-direction: column; align-items: center; color: #aaa; text-decoration: none; font-size: 12px; }
-    .icon-wrapper span { font-size: 28px; color: #aaa; margin-bottom: 4px; }
-    .icon-wrapper.active span { color: white; }
+
+    .menu-content a {
+      text-decoration: none;
+      color: rgb(213, 213, 213);
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .menu-icon {
+      padding: 10px;
+      font-size: 25px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: #0c0c0c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bottom-icons {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #121212;
+      padding: 10px 0;
+      z-index: 99;
+    }
+
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .icon-wrapper span {
+      font-size: 28px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .icon-wrapper.active span,
     .icon-wrapper.active { color: white; }
-    .button-container { position: fixed; top: 20px; left: 70px; z-index: 100; display: flex; align-items: center; gap: 10px; }
-    .button-container button { padding: 5px 15px; background-color: #1e1e1e; color: #fff; border: 1px solid #9400D3; border-radius: 50px; font-size: 12px; cursor: pointer; transition: background-color 0.3s ease; }
-    .button-container button:hover { background-color: #9400D3; }
+
+    .button-container {
+      position: fixed;
+      top: 20px;
+      left: 70px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .button-container button {
+      padding: 5px 15px;
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #9400D3;
+      border-radius: 50px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-container button:hover,
     .active-button { background-color: #9400D3; }
+
+    #muzikListesi {
+      margin-top: 90px;
+      padding: 20px;
+    }
+
+    .muzik-kart {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .muzik-kart img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .muzik-info {
+      display: flex;
+      flex-direction: column;
+    }
   </style>
 </head>
 <body>
@@ -93,7 +203,42 @@
     </a>
   </div>
 
+  <!-- Müzik listesi -->
+  <div id="muzikListesi"></div>
+
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
+      authDomain: "yuukaapp-e010.firebaseapp.com",
+      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
+      projectId: "yuukaapp-e010",
+      storageBucket: "yuukaapp-e010.appspot.com",
+      messagingSenderId: "769441264575",
+      appId: "1:769441264575:web:ffeb9e450b44253ba9a70a",
+      measurementId: "G-D9WZ47KMK8"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const muzikListesi = document.getElementById("muzikListesi");
+    const muzikRef = firebase.database().ref("muzikler");
+
+    muzikRef.on("value", (snapshot) => {
+      const veriler = snapshot.val();
+      muzikListesi.innerHTML = "";
+      for (const key in veriler) {
+        const muzik = veriler[key];
+        const kart = `
+          <div class="muzik-kart">
+            <img src="${muzik.kapak}" alt="Kapak">
+            <div class="muzik-info">
+              <div><strong>${muzik.isim}</strong></div>
+              <div>${muzik.sanatci}</div>
+            </div>
+          </div>`;
+        muzikListesi.innerHTML += kart;
+      }
+    });
+
     function openMenu() {
       document.getElementById('sidebarMenu').classList.add('active');
       document.getElementById('menuBtn').style.display = 'none';
@@ -108,24 +253,12 @@
       }
     });
 
-    document.getElementById("allBtn").addEventListener("click", function() {
-      setActiveButton(this);
-    });
-
-    document.getElementById("songsBtn").addEventListener("click", function() {
-      setActiveButton(this);
-    });
-
-    document.getElementById("albumsBtn").addEventListener("click", function() {
-      setActiveButton(this);
-    });
-
-    function setActiveButton(button) {
-      document.querySelectorAll(".button-container button").forEach(function(btn) {
-        btn.classList.remove("active-button");
+    document.querySelectorAll(".button-container button").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".button-container button").forEach(b => b.classList.remove("active-button"));
+        this.classList.add("active-button");
       });
-      button.classList.add("active-button");
-    }
+    });
   </script>
 </body>
-            </html>
+</html>
