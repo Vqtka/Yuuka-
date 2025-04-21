@@ -159,6 +159,8 @@
     #musics-list {
       margin: 20px;
       padding: 10px;
+      display: flex;
+      flex-direction: column;
     }
     .music-item {
       margin: 10px 0;
@@ -173,15 +175,10 @@
 </head>
 <body>
 
-  <!-- Sadece ikon olan ayar butonu -->
+  <!-- Menü ve Ayar butonları -->
   <button class="menu-toggle" id="menuBtn" onclick="openMenu()">
     <span class="material-symbols-outlined">settings</span>
   </button>
-  <div class="button-container">
-    <button id="allBtn">Tümü</button>
-    <button id="songsBtn">Şarkılar</button>
-    <button id="albumsBtn">Albümler</button>
-  </div>
 
   <!-- Yan Menü -->
   <div class="menu" id="sidebarMenu">
@@ -197,7 +194,7 @@
     </ul>
   </div>
 
-  <!-- Alt Iconlar -->
+  <!-- Alt İkon Menüsü -->
   <div class="bottom-icons">
     <a href="Anasayfa.html" class="icon-wrapper active">
       <span class="material-symbols-outlined">home</span>
@@ -213,12 +210,12 @@
     </a>
   </div>
 
-  <!-- Müziklerin gösterileceği alan -->
+  <!-- Müziklerin Gösterileceği Alan -->
   <div id="musics-list">
-    <!-- Firebase verisi buraya yüklenecek -->
+    <!-- Firebase'den alınan müzikler burada görünecek -->
   </div>
 
-  <!-- Firebase JS SDK ve Firebase veritabanı bağlantısı -->
+  <!-- Firebase SDK ve Bağlantı -->
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 
@@ -238,7 +235,7 @@
     // Firebase'i başlat
     const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database(app);
-    const musicsRef = database.ref("musics");
+    const musicsRef = database.ref("music");
 
     // Firebase'den veriyi al ve sayfada göster
     musicsRef.on('value', (snapshot) => {
@@ -250,4 +247,28 @@
         for (const musicId in musics) {
           const music = musics[musicId];
 
-          // Müzik verisini HTML olarak ek
+          // Müzik verisini HTML olarak ekle
+          const musicDiv = document.createElement("div");
+          musicDiv.classList.add("music-item");
+          musicDiv.innerHTML = `
+            <span><strong>Şarkı Adı:</strong> ${music.name}</span>
+            <span><strong>Sanatçı:</strong> ${music.artist}</span>
+            <span><strong>Albüm:</strong> ${music.album}</span>
+            <span><strong>Yıl:</strong> ${music.year}</span>
+          `;
+          musicsList.appendChild(musicDiv);
+        }
+      } else {
+        musicsList.innerHTML = "<p>Veri bulunamadı.</p>";
+      }
+    });
+
+    // Menü açma fonksiyonu
+    function openMenu() {
+      const menu = document.getElementById('sidebarMenu');
+      menu.classList.toggle('active');
+    }
+  </script>
+
+</body>
+        </html>
