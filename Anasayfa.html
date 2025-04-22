@@ -36,7 +36,6 @@
       margin-bottom: 15px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
     
     .music-item img {
@@ -61,31 +60,114 @@
       font-size: 14px;
     }
     
-    /* Albüm öğeleri için stil */
-    .album-item {
-      background: #1e1e1e;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    /* Sadece ikon olan ayar butonu */  
+    .menu-toggle {  
+      position: fixed;  
+      top: 20px;  
+      left: 20px;  
+      z-index: 1100;  
+      background: transparent;  
+      border: none;  
+      padding: 0;  
+      cursor: pointer;  
+    }  
 
-    .album-item img {
-      width: 100px;
-      height: 100px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      object-fit: cover;
-    }
+    .menu-toggle .material-symbols-outlined {  
+      font-size: 30px;  
+      color: white;  
+    }  
 
-    .album-item h3 {
-      margin: 0;
-      color: white;
-    }
+    /* Menü */  
+    .menu {  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      width: 250px;  
+      height: 100%;  
+      background: #121212;  
+      padding: 20px 10px;  
+      box-shadow: 8px 0px 9px 0px #00000014;  
+      z-index: 1000;  
+      transform: translateX(-100%);  
+      transition: transform 0.3s ease;  
+    }  
 
-    /* Menü ve Butonlar */
+    .menu.active {  
+      transform: translateX(0%);  
+    }  
+
+    .menu-content {  
+      display: flex;  
+      flex-direction: column;  
+      align-items: flex-start;  
+      margin-top: 60px;  
+    }  
+
+    .menu-content li {  
+      list-style: none;  
+      margin-bottom: 20px;  
+      width: 100%;  
+    }  
+
+    .menu-content li:hover {  
+      background: #9400D3;  
+    }  
+
+    .menu-content a {  
+      text-decoration: none;  
+      color: rgb(213, 213, 213);  
+      display: flex;  
+      align-items: center;  
+      width: 100%;  
+    }  
+
+    .menu-icon {  
+      padding: 10px;  
+      font-size: 25px;  
+      margin-right: 10px;  
+      border-radius: 50%;  
+      background: #0c0c0c;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+    }  
+
+    /* Alt ikon menüsü */  
+    .bottom-icons {  
+      position: fixed;  
+      bottom: 0;  
+      width: 100%;  
+      display: flex;  
+      justify-content: space-around;  
+      background: #121212;  
+      padding: 10px 0;  
+      z-index: 99;  
+    }  
+
+    .icon-wrapper {  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      color: #aaa;  
+      text-decoration: none;  
+      font-size: 12px;  
+    }  
+
+    .icon-wrapper span {  
+      font-size: 28px;  
+      color: #aaa;  
+      margin-bottom: 4px;  
+    }  
+
+    .icon-wrapper.active span {  
+      color: white;  
+    }  
+
+    .icon-wrapper.active {  
+      color: white;  
+    }  
+    
+    /* Butonlar için stil */
     .button-container {
       position: fixed;
       top: 20px;
@@ -117,7 +199,11 @@
   </style>
 </head>  
 <body>  
-  <!-- Butonlar -->
+  <!-- Sadece ikon olan ayar butonu -->    
+  <button class="menu-toggle" id="menuBtn" onclick="openMenu()">  
+    <span class="material-symbols-outlined">settings</span>  
+  </button>  
+  
   <div class="button-container">  
     <button id="allBtn" class="active-button">Tümü</button>  
     <button id="songsBtn">Şarkılar</button>  
@@ -131,10 +217,40 @@
     </div>
   </div>
   
+  <!-- Yan Menü -->  
+  <div class="menu" id="sidebarMenu">  
+    <ul class="menu-content">  
+      <li><a href="Anasayfa.html"><span class="material-symbols-outlined menu-icon">home</span><span>Ana Sayfa</span></a></li>  
+      <li><a href="Keşfet.html"><span class="material-symbols-outlined menu-icon">explore</span><span>Keşfet</span></a></li>  
+      <li><a href="Analiz.html"><span class="material-symbols-outlined menu-icon">analytics</span><span>Analiz</span></a></li>  
+      <li><a href="Ayarlar.html"><span class="material-symbols-outlined menu-icon">settings</span><span>Ayarlar</span></a></li>  
+      <li><a href="Hesap.html"><span class="material-symbols-outlined menu-icon">person</span><span>Hesap</span></a></li>  
+      <li><a href="Rapor.html"><span class="material-symbols-outlined menu-icon">report</span><span>Rapor</span></a></li>  
+      <li><a href="Iletişim.html"><span class="material-symbols-outlined menu-icon">email</span><span>İletişim</span></a></li>  
+      <li><a href="Giriş_Kayıt.html"><span class="material-symbols-outlined menu-icon">logout</span><span>Çıkış</span></a></li>  
+    </ul>
+  </div>    
+    
+  <!-- Alt Iconlar -->    
+  <div class="bottom-icons">  
+    <a href="Anasayfa.html" class="icon-wrapper active">  
+      <span class="material-symbols-outlined">home</span>  
+      Ana Sayfa  
+    </a>  
+    <a href="Arama.html" class="icon-wrapper">  
+      <span class="material-symbols-outlined">search</span>  
+      Ara  
+    </a>  
+    <a href="Kitaplik.html" class="icon-wrapper">  
+      <span class="material-symbols-outlined">menu_book</span>  
+      Kitaplık  
+    </a>  
+  </div>  
+  
   <script>  
     // Firebase yapılandırma
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY", // Burada API keyi eklemeyi unutma
+      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
       authDomain: "yuukaapp-e010.firebaseapp.com",
       databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
       projectId: "yuukaapp-e010",
@@ -164,26 +280,15 @@
         if (data) {
           Object.keys(data).forEach((key) => {
             const item = data[key];
-            if (type === 'albums') {
-              // Albümler için özel düzenleme
-              musicList.innerHTML += `
-                <div class="album-item">
-                  <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.title}">
-                  <h3>${item.title || 'Albüm Adı Yok'}</h3>
+            musicList.innerHTML += `
+              <div class="music-item">
+                <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.title}">
+                <div class="music-info">
+                  <h3>${item.title || 'Başlık Yok'}</h3>
+                  <p>${item.artist || 'Sanatçı Yok'} • ${item.album || 'Albüm Yok'}</p>
                 </div>
-              `;
-            } else {
-              // Şarkılar için özel düzenleme
-              musicList.innerHTML += `
-                <div class="music-item">
-                  <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.title}">
-                  <div class="music-info">
-                    <h3>${item.title || 'Başlık Yok'}</h3>
-                    <p>${item.artist || 'Sanatçı Yok'} • ${item.album || 'Albüm Yok'}</p>
-                  </div>
-                </div>
-              `;
-            }
+              </div>
+            `;
           });
         } else {
           musicList.innerHTML = '<p>Gösterilecek veri bulunamadı.</p>';
@@ -198,6 +303,21 @@
     window.addEventListener('DOMContentLoaded', () => {
       fetchMusicData();
     });
+
+    // Menü fonksiyonları
+    function openMenu() {  
+      document.getElementById('sidebarMenu').classList.add('active');  
+      document.getElementById('menuBtn').style.display = 'none';  
+    }  
+
+    document.addEventListener('click', function (e) {  
+      const menu = document.getElementById('sidebarMenu');  
+      const button = document.getElementById('menuBtn');  
+      if (!menu.contains(e.target) && !button.contains(e.target)) {  
+        menu.classList.remove('active');  
+        button.style.display = 'block';  
+      }  
+    });  
 
     // Filtre butonları
     document.getElementById("allBtn").addEventListener("click", function() {
@@ -223,4 +343,4 @@
     }
   </script>
 </body>  
-</html>
+  </html>
