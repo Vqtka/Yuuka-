@@ -317,102 +317,47 @@
     // Verileri çek ve göster
     function fetchMusicData(type = 'all') {
       const musicList = document.getElementById('musicList');
-      musicList.innerHTML = '<p>Yükleniyor...</p>';
-      
-      let refPath = 'music/';
-      if (type === 'songs') refPath = 'music/songs/';
-      if (type === 'albums') refPath = 'music/albums/';
-      
-      database.ref(refPath).once('value').then((snapshot) => {
+      musicList.innerHTML = '';  // Listeyi temizle
+
+      let musicRef;
+      if (type === 'all') {
+        musicRef = database.ref('music/');
+      } else {
+        musicRef = database.ref(`music/${type}`);
+      }
+
+      musicRef.once('value', function(snapshot) {
         const data = snapshot.val();
-        musicList.innerHTML = '';
-        
-        // Albüm modunda grid sınıfını ekle
-        if (type === 'albums') {
-          musicList.classList.add('album-grid');
-          if (data) {
-            Object.keys(data).forEach((key) => {
-              const item = data[key];
-              musicList.innerHTML += `
-                <div class="music-item">
-                  <img src="${item.image || 'https://via.placeholder.com/160'}" alt="${item.title || 'Başlık Yok'}">
-                  <div class="music-info">
-                    <h3>${item.title || 'Başlık Yok'}</h3>
-                    <p>${item.artist || 'Sanatçı Yok'}</p>
-                  </div>
-                </div>
-              `;
-            });
-          } else {
-            musicList.innerHTML = '<p>Albüm bulunamadı.</p>';
-          }
-        } else {
-          musicList.classList.remove('album-grid');
-          if (data) {
-            Object.keys(data).forEach((key) => {
-              const item = data[key];
-              musicList.innerHTML += `
-                <div class="music-item">
-                  <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.title}">
-                  <div class="music-info">
-                    <h3>${item.title || 'Başlık Yok'}</h3>
-                    <p>${item.artist || 'Sanatçı Yok'} • ${item.album || 'Albüm Yok'}</p>
-                  </div>
-                </div>
-              `;
-            });
-          } else {
-            musicList.innerHTML = '<p>Gösterilecek veri bulunamadı.</p>';
+        if (data) {
+          for (let key in data) {
+            const music = data[key];
+            const musicItem = document.createElement('div');
+            musicItem.classList.add('music-item');
+            musicItem.innerHTML = `
+              <img src="${music.image}" alt="${music.title}">
+              <div class="music-info">
+                <h3>${music.title}</h3>
+                <p>${music.artist}</p>
+              </div>
+            `;
+            musicList.appendChild(musicItem);
           }
         }
-      }).catch((error) => {
-        console.error("Veri okuma hatası:", error);
-        musicList.innerHTML = '<p>Veriler yüklenirken bir hata oluştu.</p>';
       });
     }
 
-    // Sayfa yüklendiğinde verileri getir
-    window.addEventListener('DOMContentLoaded', () => {
-      fetchMusicData();
-    });
-
-    // Menü fonksiyonları
-    function openMenu() {  
-      document.getElementById('sidebarMenu').classList.add('active');  
-      document.getElementById('menuBtn').style.display = 'none';  
-    }  
-
-    document.addEventListener('click', function (e) {  
-      const menu = document.getElementById('sidebarMenu');  
-      const button = document.getElementById('menuBtn');  
-      if (!menu.contains(e.target) && !button.contains(e.target)) {  
-        menu.classList.remove('active');  
-        button.style.display = 'block';  
-      }  
-    });  
-
-    // Filtre butonları
-    document.getElementById("allBtn").addEventListener("click", function() {
-      setActiveButton(this);
-      fetchMusicData('all');
-    });
-
-    document.getElementById("songsBtn").addEventListener("click", function() {
-      setActiveButton(this);
-      fetchMusicData('songs');
-    });
-
-    document.getElementById("albumsBtn").addEventListener("click", function() {
-      setActiveButton(this);
-      fetchMusicData('albums');
-    });
-
-    function setActiveButton(button) {
-      document.querySelectorAll(".button-container button").forEach(function(btn) {
-        btn.classList.remove("active-button");
-      });
-      button.classList.add("active-button");
+    // Menüyü açma
+    function openMenu() {
+      document.getElementById('sidebarMenu').classList.toggle('active');
     }
+
+    // Sayfa yüklenince tüm müzikleri getir
+    fetchMusicData('all');
+
+    // Butonlar için filtreleme
+    document.getElementById('allBtn').addEventListener('click', () => fetchMusicData('all'));
+    document.getElementById('songsBtn').addEventListener('click', () => fetchMusicData('songs'));
+    document.getElementById('albumsBtn').addEventListener('click', () => fetchMusicData('albums'));
   </script>
 </body>  
   </html>
