@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hesap</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <style>
     body {
       font-family: 'calibri', sans-serif;
@@ -20,21 +17,20 @@
       align-items: center;
       margin-bottom: 20px;
     }
-    /* Yuvarlak Profil Fotoğrafı */
     .profile-photo {
       width: 80px;
       height: 80px;
       border-radius: 50%;
       background-color: #444;
+      background-size: cover;
+      background-position: center;
       margin-right: 20px;
     }
-    /* Kullanıcı Adı */
     .username {
       font-size: 22px;
       margin-top: -10px;
       color: white;
     }
-    /* Düzenle Butonu */
     .edit-btn {
       padding: 10px 20px;
       background-color: transparent;
@@ -49,7 +45,6 @@
       background-color: white;
       color: #121212;
     }
-    /* Sayfanın tüm düzeni */
     .profile-section {
       display: flex;
       flex-direction: column;
@@ -63,59 +58,29 @@
   
   <div class="profile-section">
     <div class="profile-info">
-      <!-- Profil Fotoğrafı Yuvarlak -->
       <div class="profile-photo" id="profileImage"></div>
-      
-      <!-- Kullanıcı Adı -->
       <div class="username" id="username">Rei</div>
     </div>
-    
-    <!-- Düzenle Butonu -->
     <button class="edit-btn" onclick="editProfile()">Düzenle</button>
   </div>
 
   <script>
-    // Firebase'i başlat
-    const firebaseConfig = {
-      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
-      authDomain: "yuukaapp-e010.firebaseapp.com",
-      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
-      projectId: "yuukaapp-e010",
-      storageBucket: "yuukaapp-e010.appspot.com",
-      messagingSenderId: "769441264575",
-      appId: "1:769441264575:web:ffeb9e450b44253ba9a70a",
-      measurementId: "G-D9WZ47KMK8"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
+    // localStorage'dan verileri çek
+    window.onload = () => {
+      const savedPhoto = localStorage.getItem("profilePhoto");
+      const savedName = localStorage.getItem("userName");
 
-    // Kullanıcı bilgilerini çek
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        // Firebase'den kullanıcı bilgilerini al
-        const userRef = database.ref('users/' + user.uid);
-        userRef.once('value').then(snapshot => {
-          const userData = snapshot.val();
-          if (userData) {
-            // Profil fotoğrafı (yuvarlak) ve kullanıcı adı
-            document.getElementById('profileImage').style.backgroundImage = `url(${userData.profileImage || 'profile-placeholder.jpg'})`;
-            document.getElementById('username').textContent = userData.username || 'Rei';
-          }
-        });
-        console.log("Kullanıcı adı:", userData.username);
-console.log("Profil fotoğrafı:", userData.profileImage);
-      } else {
-        // Kullanıcı giriş yapmamışsa, giriş yapması gerektiğini göster
-        alert('Lütfen giriş yapın.');
-        window.location.href = 'Giriş_Kayıt.html';
+      if (savedPhoto) {
+        document.getElementById("profileImage").style.backgroundImage = `url(${savedPhoto})`;
       }
-    });
 
-    // Profili düzenle
+      if (savedName) {
+        document.getElementById("username").textContent = savedName;
+      }
+    };
+
     function editProfile() {
-      window.location.href = 'Düzenle.html'; // Profil düzenleme sayfasına yönlendir
+      window.location.href = 'Düzenle.html';
     }
   </script>
 </body>
