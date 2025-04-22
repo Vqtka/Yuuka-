@@ -26,6 +26,26 @@
       color: white;
     }
 
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-buttons button {
+      background: #9400D3;
+      border: none;
+      padding: 10px;
+      color: white;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .filter-buttons button:hover {
+      background: #7b00a7;
+    }
+
     .category {
       margin-bottom: 40px;
     }
@@ -208,6 +228,12 @@
   </button>  
 
   <div class="content-area" id="contentArea">
+    <div class="filter-buttons">
+      <button id="allButton" onclick="filterView('all')">Tümü</button>
+      <button id="songsButton" onclick="filterView('songs')">Şarkılar</button>
+      <button id="albumsButton" onclick="filterView('albums')">Albümler</button>
+    </div>
+
     <div id="categoryContainer"></div>
   </div>
 
@@ -215,115 +241,79 @@
     <ul class="menu-content">
       <li><a href="Anasayfa.html"><span class="material-symbols-outlined menu-icon">home</span><span>Ana Sayfa</span></a></li>
       <li><a href="Keşfet.html"><span class="material-symbols-outlined menu-icon">explore</span><span>Keşfet</span></a></li>
-      <li><a href="Analiz.html"><span class="material-symbols-outlined menu-icon">analytics</span><span>Analiz</span></a></li>
-      <li><a href="Ayarlar.html"><span class="material-symbols-outlined menu-icon">settings</span><span>Ayarlar</span></a></li>
-      <li><a href="Hesap.html"><span class="material-symbols-outlined menu-icon">person</span><span>Hesap</span></a></li>
-      <li><a href="Rapor.html"><span class="material-symbols-outlined menu-icon">report</span><span>Rapor</span></a></li>
-      <li><a href="Iletişim.html"><span class="material-symbols-outlined menu-icon">email</span><span>İletişim</span></a></li>
-      <li><a href="Giriş_Kayıt.html"><span class="material-symbols-outlined menu-icon">logout</span><span>Çıkış</span></a></li>
     </ul>
-  </div>  
-
-  <div class="bottom-icons">
-    <a href="Anasayfa.html" class="icon-wrapper active">  
-      <span class="material-symbols-outlined">home</span>  
-      Ana Sayfa  
-    </a>  
-    <a href="Arama.html" class="icon-wrapper">  
-      <span class="material-symbols-outlined">search</span>  
-      Ara  
-    </a>  
-    <a href="Kitaplik.html" class="icon-wrapper">  
-      <span class="material-symbols-outlined">menu_book</span>  
-      Kitaplık  
-    </a>  
   </div>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
-      authDomain: "yuukaapp-e010.firebaseapp.com",
-      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
-      projectId: "yuukaapp-e010",
-      storageBucket: "yuukaapp-e010.firebasest.appspot.com",
-      messagingSenderId: "292133153197",
-      appId: "1:292133153197:web:7e2d2f8f9b7d99a8a241da"
-    };
+    // Örnek Firebase veritabanı yapısı
+    const albums = [
+      { name: "Album 1", artist: "Artist 1", imageUrl: "https://via.placeholder.com/150" },
+      { name: "Album 2", artist: "Artist 2", imageUrl: "https://via.placeholder.com/150" },
+      { name: "Album 3", artist: "Artist 3", imageUrl: "https://via.placeholder.com/150" }
+    ];
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    const songs = [
+      { name: "Song 1", artist: "Artist 1", album: "Album 1" },
+      { name: "Song 2", artist: "Artist 2", album: "Album 2" },
+      { name: "Song 3", artist: "Artist 3", album: "Album 3" }
+    ];
 
-    // Albüm verilerini çekme
-    const getMusicData = () => {
-      database.ref('/albums').once('value', snapshot => {
-        const data = snapshot.val();
-        const categoryContainer = document.getElementById('categoryContainer');
-        categoryContainer.innerHTML = '';
-        for (let category in data) {
-          const categoryDiv = document.createElement('div');
-          categoryDiv.classList.add('category');
-          const categoryTitle = document.createElement('h2');
-          categoryTitle.textContent = category;
-          categoryDiv.appendChild(categoryTitle);
+    function filterView(type) {
+      const categoryContainer = document.getElementById("categoryContainer");
+      categoryContainer.innerHTML = "";
 
-          const albumScrollContainer = document.createElement('div');
-          albumScrollContainer.classList.add('album-scroll-container');
-
-          for (let album of data[category]) {
-            const albumItem = document.createElement('div');
-            albumItem.classList.add('album-item');
-            albumItem.innerHTML = `
-              <img src="${album.imgUrl}" alt="${album.title}" />
-              <div class="album-info">
-                <h3>${album.title}</h3>
-                <p>${album.artist}</p>
-                <button onclick="showTracks('${album.id}')">Şarkıları Göster</button>
-              </div>
-            `;
-            albumScrollContainer.appendChild(albumItem);
-          }
-          
-          categoryDiv.appendChild(albumScrollContainer);
-          categoryContainer.appendChild(categoryDiv);
-        }
-      });
-    };
-
-    // Şarkıları gösterme
-    function showTracks(albumId) {
-      const categoryContainer = document.getElementById('categoryContainer');
-      const categoryDiv = document.createElement('div');
-      categoryDiv.classList.add('category');
-      const tracksTitle = document.createElement('h2');
-      tracksTitle.textContent = 'Şarkılar';
-      categoryDiv.appendChild(tracksTitle);
-
-      database.ref('/albums/' + albumId + '/tracks').once('value', snapshot => {
-        const tracks = snapshot.val();
-        for (let track of tracks) {
-          const trackDiv = document.createElement('div');
-          trackDiv.classList.add('album-item');
-          trackDiv.innerHTML = `
-            <div class="album-info">
-              <h3>${track.title}</h3>
-              <p>${track.artist}</p>
-            </div>
-          `;
-          categoryDiv.appendChild(trackDiv);
-        }
-      });
-
-      categoryContainer.appendChild(categoryDiv);
+      if (type === 'all') {
+        // TÜMÜ
+        displayAlbums();
+        displaySongs();
+      } else if (type === 'albums') {
+        // ALBÜMLER
+        displayAlbums();
+      } else if (type === 'songs') {
+        // ŞARKILAR
+        displaySongs();
+      }
     }
 
-    // Sayfa yüklendiğinde veriyi al
-    window.onload = getMusicData;
+    function displayAlbums() {
+      const categoryContainer = document.getElementById("categoryContainer");
+      const albumScrollContainer = document.createElement('div');
+      albumScrollContainer.classList.add('album-scroll-container');
+      
+      albums.forEach(album => {
+        const albumItem = document.createElement('div');
+        albumItem.classList.add('album-item');
+        albumItem.innerHTML = `
+          <img src="${album.imageUrl}" alt="${album.name}">
+          <div class="album-info">
+            <h3>${album.name}</h3>
+            <p>${album.artist}</p>
+            <button>Albümü Görüntüle</button>
+          </div>
+        `;
+        albumScrollContainer.appendChild(albumItem);
+      });
 
-    function openMenu() {
-      const menu = document.getElementById("sidebarMenu");
-      menu.classList.toggle("active");
+      categoryContainer.appendChild(albumScrollContainer);
+    }
+
+    function displaySongs() {
+      const categoryContainer = document.getElementById("categoryContainer");
+      categoryContainer.innerHTML = '<h2>Şarkılar</h2>';
+
+      songs.forEach(song => {
+        const songItem = document.createElement('div');
+        songItem.classList.add('album-item');
+        songItem.innerHTML = `
+          <div class="album-info">
+            <h3>${song.name}</h3>
+            <p>${song.artist}</p>
+            <button>Şarkıyı Dinle</button>
+          </div>
+        `;
+        categoryContainer.appendChild(songItem);
+      });
     }
   </script>
-
 </body>
-  </html>
+</html>
