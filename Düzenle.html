@@ -1,14 +1,164 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profili Düzenle</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'calibri', sans-serif;
+      background-color: #121212;
+      color: white;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #9400D3;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #7A00A1;
+    }
+
+    .image-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #444;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .edit-icon {
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+      background-color: #9400D3;
+      padding: 6px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .edit-icon .material-symbols-outlined {
+      color: white;
+      font-size: 18px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  </style>
 </head>
-
 <body>
-  
-</body>
 
+  <h1>Profili Düzenle</h1>
+
+  <div class="form-group">
+    <div class="image-container">
+      <div class="preview" id="imagePreview"></div>
+      <label class="edit-icon" for="profileImageInput">
+        <span class="material-symbols-outlined">edit</span>
+      </label>
+    </div>
+    <input type="file" id="profileImageInput" accept="image/*" />
+  </div>
+
+  <div class="form-group">
+    <label for="usernameInput">Kullanıcı Adı</label>
+    <input type="text" id="usernameInput" placeholder="Yeni adınızı girin" />
+  </div>
+
+  <button onclick="saveChanges()">Kaydet</button>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCImU7d9bsX-W1wtexIdi2-fqsHsVwQ2v0",
+      authDomain: "yuukaapp-e010.firebaseapp.com",
+      databaseURL: "https://yuukaapp-e010-default-rtdb.firebaseio.com",
+      projectId: "yuukaapp-e010",
+      storageBucket: "yuukaapp-e010.appspot.com",
+      messagingSenderId: "769441264575",
+      appId: "1:769441264575:web:ffeb9e450b44253ba9a70a",
+      measurementId: "G-D9WZ47KMK8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+    const storage = firebase.storage();
+
+    const profileImageInput = document.getElementById('profileImageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    let selectedImageFile = null;
+
+    profileImageInput.addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imagePreview.style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function saveChanges() {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          const username = document.getElementById('usernameInput').value;
+          const userRef = database.ref('users/' + user.uid);
+
+          const updates = {};
+          if (username.trim()) updates.username = username;
+
+          if (selectedImageFile) {
+            const storageRef = storage.ref('profileImages/' + user.uid);
+            storageRef.put(selectedImageFile).then(snapshot => {
+              snapshot.ref.getDownloadURL().then(url => {
+                updates.profileImage = url;
+                userRef.update(updates).then(() => {
+                  alert('Profil güncellendi!');
+                  window.location.href = 'Hesap.html';
+                });
+              });
+            });
+          } else {
+            userRef.update(updates).then(() => {
+              alert('Profil güncellendi!');
+              window.location.href = 'Hesap.html';
+            });
+          }
+        } else {
+          alert('Lütfen giriş yapın.');
+          window.location.href = 'Giriş_Kayıt.html';
+        }
+      });
+    }
+  </script>
+</body>
 </html>
