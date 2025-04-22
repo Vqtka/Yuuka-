@@ -31,7 +31,7 @@
     /* Albüm modunda grid düzeni */
     .album-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 20px;
     }
 
@@ -49,8 +49,8 @@
     .album-grid .music-item {
       background: none;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      text-align: left;
       padding: 0;
       margin-bottom: 0;
     }
@@ -64,11 +64,12 @@
     }
 
     .album-grid .music-item img {
-      width: 100%;
-      height: auto;
-      max-width: 150px;
+      width: 160px;
+      height: 160px; /* Kare şekli için sabit boyut */
+      border-radius: 8px; /* Örnekteki hafif yuvarlatılmış köşeler */
       margin-right: 0;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      object-fit: cover; /* Görseli kareye sığdır */
     }
 
     .music-info {
@@ -77,6 +78,7 @@
 
     .album-grid .music-info {
       flex: none;
+      width: 160px; /* İsimlerin taşmasını engelle */
     }
 
     .music-info h3 {
@@ -85,8 +87,13 @@
     }
 
     .album-grid .music-info h3 {
-      font-size: 14px;
-      margin-bottom: 0;
+      font-size: 16px; /* Örnekteki albüm ismi boyutu */
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .music-info p {
@@ -95,7 +102,12 @@
     }
 
     .album-grid .music-info p {
-      display: none; /* Sanatçı ve albüm bilgilerini albüm modunda gizle */
+      font-size: 13px; /* Örnekteki sanatçı ismi boyutu */
+      color: #aaa;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block; /* Sanatçı bilgisini albüm modunda göster */
     }
 
     /* Sadece ikon olan ayar butonu */  
@@ -318,25 +330,27 @@
         // Albüm modunda grid sınıfını ekle
         if (type === 'albums') {
           musicList.classList.add('album-grid');
-        } else {
-          musicList.classList.remove('album-grid');
-        }
-        
-        if (data) {
-          Object.keys(data).forEach((key) => {
-            const item = data[key];
-            if (type === 'albums') {
-              // Albüm modunda sadece kapak ve isim
+          if (data) {
+            Object.keys(data).forEach((key) => {
+              const item = data[key];
               musicList.innerHTML += `
                 <div class="music-item">
-                  <img src="${item.image || 'https://via.placeholder.com/150'}" alt="${item.title}">
+                  <img src="${item.image || 'https://via.placeholder.com/160'}" alt="${item.title || 'Başlık Yok'}">
                   <div class="music-info">
                     <h3>${item.title || 'Başlık Yok'}</h3>
+                    <p>${item.artist || 'Sanatçı Yok'}</p>
                   </div>
                 </div>
               `;
-            } else {
-              // Diğer modlarda mevcut düzen
+            });
+          } else {
+            musicList.innerHTML = '<p>Albüm bulunamadı.</p>';
+          }
+        } else {
+          musicList.classList.remove('album-grid');
+          if (data) {
+            Object.keys(data).forEach((key) => {
+              const item = data[key];
               musicList.innerHTML += `
                 <div class="music-item">
                   <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.title}">
@@ -346,10 +360,10 @@
                   </div>
                 </div>
               `;
-            }
-          });
-        } else {
-          musicList.innerHTML = '<p>Gösterilecek veri bulunamadı.</p>';
+            });
+          } else {
+            musicList.innerHTML = '<p>Gösterilecek veri bulunamadı.</p>';
+          }
         }
       }).catch((error) => {
         console.error("Veri okuma hatası:", error);
@@ -401,4 +415,4 @@
     }
   </script>
 </body>  
-      </html>
+  </html>
