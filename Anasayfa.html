@@ -37,15 +37,16 @@
 
     .album-scroll-container {
       display: flex;
-      overflow-x: auto;
+      flex-wrap: wrap;
       gap: 20px;
+      justify-content: space-between;
       padding-bottom: 20px;
     }
 
     .album-item {
       background: #1e1e1e;
       border-radius: 10px;
-      width: 160px;
+      width: 48%;
       padding: 10px;
       display: flex;
       flex-direction: column;
@@ -79,6 +80,20 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .album-info button {
+      background: #9400D3;
+      border: none;
+      padding: 5px 10px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .album-info button:hover {
+      background: #7b00a7;
     }
 
     .menu-toggle {
@@ -263,6 +278,7 @@
               <div class="album-info">
                 <h3>${album.title}</h3>
                 <p>${album.artist}</p>
+                <button onclick="showTracks('${album.id}')">Şarkıları Göster</button>
               </div>
             `;
             albumScrollContainer.appendChild(albumItem);
@@ -273,6 +289,33 @@
         }
       });
     };
+
+    // Şarkıları gösterme
+    function showTracks(albumId) {
+      const categoryContainer = document.getElementById('categoryContainer');
+      const categoryDiv = document.createElement('div');
+      categoryDiv.classList.add('category');
+      const tracksTitle = document.createElement('h2');
+      tracksTitle.textContent = 'Şarkılar';
+      categoryDiv.appendChild(tracksTitle);
+
+      database.ref('/albums/' + albumId + '/tracks').once('value', snapshot => {
+        const tracks = snapshot.val();
+        for (let track of tracks) {
+          const trackDiv = document.createElement('div');
+          trackDiv.classList.add('album-item');
+          trackDiv.innerHTML = `
+            <div class="album-info">
+              <h3>${track.title}</h3>
+              <p>${track.artist}</p>
+            </div>
+          `;
+          categoryDiv.appendChild(trackDiv);
+        }
+      });
+
+      categoryContainer.appendChild(categoryDiv);
+    }
 
     // Sayfa yüklendiğinde veriyi al
     window.onload = getMusicData;
